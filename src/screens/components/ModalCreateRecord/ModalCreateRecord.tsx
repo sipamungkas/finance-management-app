@@ -13,12 +13,13 @@ import styles from './styles';
 import {
   getDBConnection,
   getRecords,
+  getRecordsByMonth,
   saveRecord,
 } from '../../../libs/db/db-services';
 import {useRecordsStore} from '../../../libs/store';
 
 const ModalCreateRecord = ({modalVisible, setModalVisible}: any) => {
-  const {setNewData} = useRecordsStore();
+  const {setNewData, setMonthlyExpense, setMonthlyIncome} = useRecordsStore();
   const [type, setType] = useState('expense');
   const [amount, setAmount] = useState(0);
   const [desc, setDesc] = useState('');
@@ -36,6 +37,20 @@ const ModalCreateRecord = ({modalVisible, setModalVisible}: any) => {
       await saveRecord(db, {type, amount, description: desc, category});
       const newData = await getRecords(db);
       setNewData(newData);
+      const _monthlyIncome = await getRecordsByMonth(
+        db,
+        new Date().getMonth() + 1,
+        'income',
+      );
+
+      const _monthlyExpense = await getRecordsByMonth(
+        db,
+        new Date().getMonth() + 1,
+        'expense',
+      );
+
+      setMonthlyExpense(_monthlyExpense);
+      setMonthlyIncome(_monthlyIncome);
       setModalVisible(false);
     } catch (error) {
       console.error(error);

@@ -7,6 +7,7 @@ import {
   deleteRecords,
   getDBConnection,
   getRecords,
+  getRecordsByMonth,
 } from '../../../libs/db/db-services';
 import {useRecordsStore} from '../../../libs/store';
 
@@ -21,7 +22,7 @@ export type RowProps = {
 
 const RowItem = (props: RowProps) => {
   const {amount, type, category, date, description, id} = props;
-  const {setNewData} = useRecordsStore();
+  const {setNewData, setMonthlyExpense, setMonthlyIncome} = useRecordsStore();
 
   const onDeleteItem = async (_id: number) => {
     try {
@@ -29,6 +30,20 @@ const RowItem = (props: RowProps) => {
       deleteRecords(db, _id);
       Alert.alert('Delete data success');
       const newData = await getRecords(db);
+      const _monthlyIncome = await getRecordsByMonth(
+        db,
+        new Date().getMonth() + 1,
+        'income',
+      );
+
+      const _monthlyExpense = await getRecordsByMonth(
+        db,
+        new Date().getMonth() + 1,
+        'expense',
+      );
+
+      setMonthlyExpense(_monthlyExpense);
+      setMonthlyIncome(_monthlyIncome);
       setNewData(newData);
     } catch (error) {
       Alert.alert('failed to delete data');

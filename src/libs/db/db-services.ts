@@ -46,8 +46,9 @@ export const getRecords = async (db: SQLiteDatabase): Promise<RowProps[]> => {
 export const saveRecord = async (db: SQLiteDatabase, data: any) => {
   const insertQuery =
     `INSERT INTO ${tableName}(amount, type, category, description) values` +
-    `( ${data.amount}, '${data.type}', '${data.category}', '${data.description}')`;
-  console.log({insertQuery});
+    `( ${data.amount}, '${data.type.toLowerCase()}', '${data.category}', '${
+      data.description
+    }')`;
 
   return db.executeSql(insertQuery);
 };
@@ -55,6 +56,18 @@ export const saveRecord = async (db: SQLiteDatabase, data: any) => {
 export const deleteRecords = async (db: SQLiteDatabase, id: number) => {
   const deleteQuery = `DELETE from ${tableName} where rowid = ${id}`;
   await db.executeSql(deleteQuery);
+};
+
+export const getRecordsByMonth = async (
+  db: SQLiteDatabase,
+  month: number,
+  type: 'expense' | 'income',
+) => {
+  const query = `SELECT SUM(amount) as total_amount FROM ${tableName} where date like '%${month}%' and type = '${type}'`;
+
+  const results = await db.executeSql(query);
+
+  return results[0]?.rows?.item(0)?.total_amount || 0;
 };
 
 export const deleteTable = async (db: SQLiteDatabase) => {

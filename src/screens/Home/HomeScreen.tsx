@@ -9,19 +9,46 @@ import {
   createTable,
   getDBConnection,
   getRecords,
+  getRecordsByMonth,
 } from '../../libs/db/db-services';
 import {useRecordsStore} from '../../libs/store';
 
+const Empty = () => (
+  <Text style={{textAlign: 'center', marginTop: 24}}>No Data</Text>
+);
+
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const {setNewData, data} = useRecordsStore();
+  const {
+    setNewData,
+    data,
+    monthlyIncome,
+    monthlyExpense,
+    setMonthlyExpense,
+    setMonthlyIncome,
+  } = useRecordsStore();
+
   const loadDataCallback = useCallback(async () => {
     try {
       const db = await getDBConnection();
       // deleteTable(db);
       await createTable(db);
       const storedRecords = await getRecords(db);
-      console.log({storedRecords});
+      const _monthlyIncome = await getRecordsByMonth(
+        db,
+        new Date().getMonth() + 1,
+        'income',
+      );
+
+      const _monthlyExpense = await getRecordsByMonth(
+        db,
+        new Date().getMonth() + 1,
+        'expense',
+      );
+
+      setMonthlyExpense(_monthlyExpense);
+      setMonthlyIncome(_monthlyIncome);
+
       if (storedRecords.length) {
         setNewData(storedRecords);
       } else {
@@ -30,13 +57,12 @@ const HomeScreen = () => {
     } catch (error) {
       console.error(error);
     }
-  }, [setNewData]);
+  }, [setMonthlyExpense, setMonthlyIncome, setNewData]);
 
   useEffect(() => {
     loadDataCallback();
   }, [loadDataCallback]);
 
-  console.log({data});
   return (
     <View style={styles.container}>
       <View style={[styles.wrapper]}>
@@ -45,14 +71,14 @@ const HomeScreen = () => {
             <ArrowUp size={20} />
             <Text>Expense</Text>
           </View>
-          <Text style={styles.txtAmmount}>IDR 500.000</Text>
+          <Text style={styles.txtAmmount}>IDR {monthlyIncome}</Text>
         </View>
         <View style={styles.card}>
           <View style={styles.cardContainer}>
             <ArrowDown size={20} />
             <Text>Income</Text>
           </View>
-          <Text style={styles.txtAmmount}>IDR 500.000</Text>
+          <Text style={styles.txtAmmount}>IDR {monthlyExpense}</Text>
         </View>
       </View>
 
@@ -64,6 +90,7 @@ const HomeScreen = () => {
         contentContainerStyle={{gap: 8}}
         data={data}
         renderItem={({item}) => <RowItem {...item} />}
+        ListEmptyComponent={Empty}
       />
       <View style={styles.fabWrapper}>
         <TouchableOpacity
