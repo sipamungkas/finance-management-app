@@ -15,6 +15,7 @@ import {
   getRecords,
   getRecordsByMonth,
   saveRecord,
+  updateRecordById,
 } from '../../../libs/db/db-services';
 import {useRecordsStore} from '../../../libs/store';
 
@@ -45,7 +46,11 @@ const ModalCreateRecord = ({modalVisible, setModalVisible, id}: any) => {
     try {
       setIsLoading(true);
       const db = await getDBConnection();
-      await saveRecord(db, {type, amount, description: desc, category});
+      if (!id) {
+        await saveRecord(db, {type, amount, description: desc, category});
+      } else {
+        updateRecordById(db, {type, amount, description: desc, category, id});
+      }
       const newData = await getRecords(db);
       setNewData(newData);
       const _monthlyIncome = await getRecordsByMonth(

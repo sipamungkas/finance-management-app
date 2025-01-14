@@ -70,6 +70,12 @@ export const getRecordsByMonth = async (
   return results[0]?.rows?.item(0)?.total_amount || 0;
 };
 
+export const updateRecordById = async (db: SQLiteDatabase, data: any) => {
+  const query = `UPDATE ${tableName} SET amount = ${data.amount}, category = '${data.category}', description = '${data.description}' where rowid = ${data.id}`;
+
+  return db.executeSql(query);
+};
+
 export const deleteTable = async (db: SQLiteDatabase) => {
   const query = `drop table ${tableName}`;
 
