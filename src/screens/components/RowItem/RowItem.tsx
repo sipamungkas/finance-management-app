@@ -18,10 +18,11 @@ export type RowProps = {
   date: string;
   description?: string;
   id: number;
+  onPress: () => {};
 };
 
 const RowItem = (props: RowProps) => {
-  const {amount, type, category, date, description, id} = props;
+  const {amount, type, category, date, description, id, onPress} = props;
   const {setNewData, setMonthlyExpense, setMonthlyIncome} = useRecordsStore();
 
   const onDeleteItem = async (_id: number) => {
@@ -51,28 +52,30 @@ const RowItem = (props: RowProps) => {
   };
   const dateObj = new Date(date);
   return (
-    <View style={styles.container}>
-      <View style={styles.wrapper}>
-        {type?.toLowerCase() === 'expense' ? (
-          <ChevronDown size={28} stroke={'red'} />
-        ) : (
-          <ChevronUp size={28} stroke={'green'} />
-        )}
-        <View style={{gap: 4}}>
-          <Text style={styles.txtAmount}>IDR {amount}</Text>
-          <Text style={styles.txtDate}>
-            {dateObj.getDate()}-{dateObj.getMonth() + 1}-{dateObj.getFullYear()}{' '}
-            - {category}
-          </Text>
-          <Text style={{fontSize: 12, color: '#9e9e9e'}}>{description}</Text>
+    <Pressable onPress={onPress}>
+      <View style={styles.container}>
+        <View style={styles.wrapper}>
+          {type?.toLowerCase() === 'expense' ? (
+            <ChevronDown size={28} stroke={'red'} />
+          ) : (
+            <ChevronUp size={28} stroke={'green'} />
+          )}
+          <View style={{gap: 4}}>
+            <Text style={styles.txtAmount}>IDR {amount}</Text>
+            <Text style={styles.txtDate}>
+              {dateObj.getDate()}-{dateObj.getMonth() + 1}-
+              {dateObj.getFullYear()} - {category}
+            </Text>
+            <Text style={{fontSize: 12, color: '#9e9e9e'}}>{description}</Text>
+          </View>
         </View>
+        <Pressable onPress={() => onDeleteItem(id)}>
+          <View style={styles.btnWrapper}>
+            <Trash size={20} stroke={'red'} />
+          </View>
+        </Pressable>
       </View>
-      <Pressable onPress={() => onDeleteItem(id)}>
-        <View style={styles.btnWrapper}>
-          <Trash size={20} stroke={'red'} />
-        </View>
-      </Pressable>
-    </View>
+    </Pressable>
   );
 };
 

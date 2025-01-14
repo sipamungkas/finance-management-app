@@ -25,6 +25,7 @@ export default StyleSheet.create({
   txtAmmount: {
     paddingHorizontal: 24,
     marginTop: 5,
+    color: 'red',
   },
   fabWrapper: {
     position: 'absolute',

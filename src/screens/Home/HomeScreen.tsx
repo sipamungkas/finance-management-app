@@ -19,6 +19,7 @@ const Empty = () => (
 
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedId, setSelectedId] = useState();
   const {
     setNewData,
     data,
@@ -68,17 +69,19 @@ const HomeScreen = () => {
       <View style={[styles.wrapper]}>
         <View style={styles.card}>
           <View style={styles.cardContainer}>
-            <ArrowUp size={20} />
-            <Text>Expense</Text>
+            <ArrowUp stroke={'red'} size={20} />
+            <Text style={{fontSize: 18, color: 'red'}}>Expense</Text>
           </View>
           <Text style={styles.txtAmmount}>IDR {monthlyIncome}</Text>
         </View>
         <View style={styles.card}>
           <View style={styles.cardContainer}>
-            <ArrowDown size={20} />
-            <Text>Income</Text>
+            <ArrowDown stroke={'green'} size={20} />
+            <Text style={{fontSize: 18, color: 'green'}}>Income</Text>
           </View>
-          <Text style={styles.txtAmmount}>IDR {monthlyExpense}</Text>
+          <Text style={[styles.txtAmmount, {color: 'green'}]}>
+            IDR {monthlyExpense}
+          </Text>
         </View>
       </View>
 
@@ -89,19 +92,33 @@ const HomeScreen = () => {
         style={{width: '100%'}}
         contentContainerStyle={{gap: 8}}
         data={data}
-        renderItem={({item}) => <RowItem {...item} />}
+        renderItem={({item}) => (
+          <RowItem
+            onPress={() => {
+              setSelectedId(item.id);
+              setTimeout(() => {
+                setModalVisible(true);
+              }, 300);
+            }}
+            {...item}
+          />
+        )}
         ListEmptyComponent={Empty}
       />
       <View style={styles.fabWrapper}>
         <TouchableOpacity
           activeOpacity={0.2}
           onPress={() => {
-            setModalVisible(true);
+            setSelectedId(undefined);
+            setTimeout(() => {
+              setModalVisible(true);
+            }, 500);
           }}>
           <PlusCircle size={38} />
         </TouchableOpacity>
       </View>
       <ModalCreateRecord
+        id={selectedId}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
       />
