@@ -35,6 +35,11 @@ const ModalCreateRecord = ({modalVisible, setModalVisible, id}: any) => {
       setAmount(detail.amount);
       setDesc(detail.description);
       setCategory(detail.category);
+    } else {
+      setType('');
+      setAmount(0);
+      setDesc('');
+      setCategory('');
     }
   }, [detail, id]);
 
