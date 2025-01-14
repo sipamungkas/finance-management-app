@@ -1,18 +1,46 @@
-import {View, Text, Pressable, Modal, TextInput, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  Pressable,
+  Modal,
+  TextInput,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useState} from 'react';
 
 import styles from './styles';
+import {
+  getDBConnection,
+  getRecords,
+  saveRecord,
+} from '../../../libs/db/db-services';
+import {useRecordsStore} from '../../../libs/store';
 
 const ModalCreateRecord = ({modalVisible, setModalVisible}: any) => {
+  const {setNewData} = useRecordsStore();
   const [type, setType] = useState('expense');
   const [amount, setAmount] = useState(0);
   const [desc, setDesc] = useState('');
   const [category, setCategory] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onSave = () => {
+  const onSave = async () => {
     if (!type || !amount || !desc || !category) {
       Alert.alert('Semua form harus diisi!');
       return;
+    }
+    try {
+      setIsLoading(true);
+      const db = await getDBConnection();
+      await saveRecord(db, {type, amount, description: desc, category});
+      const newData = await getRecords(db);
+      setNewData(newData);
+      setModalVisible(false);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -65,8 +93,11 @@ const ModalCreateRecord = ({modalVisible, setModalVisible}: any) => {
                 styles.buttonClose,
                 {backgroundColor: 'green'},
               ]}
+              disabled={isLoading}
               onPress={() => onSave()}>
-              <Text style={styles.textStyle}>Simpan</Text>
+              <Text style={styles.textStyle}>
+                {isLoading ? <ActivityIndicator /> : 'Simpan'}
+              </Text>
             </Pressable>
           </View>
         </View>

@@ -1,28 +1,42 @@
 import {View, Text, FlatList, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import styles from './styles';
 import {ArrowDown, ArrowUp, PlusCircle} from 'lucide-react-native';
-import RowItem, {RowProps} from '../components/RowItem/RowItem';
+import RowItem from '../components/RowItem/RowItem';
 import ModalCreateRecord from '../components/ModalCreateRecord/ModalCreateRecord';
-
-const dummy: RowProps[] = [
-  {
-    type: 'expense',
-    amount: 500000,
-    date: '2023-01-01',
-    category: 'Food',
-  },
-  {
-    type: 'income',
-    amount: 500000,
-    date: '2023-01-01',
-    category: 'Salary',
-  },
-];
+import {
+  createTable,
+  getDBConnection,
+  getRecords,
+} from '../../libs/db/db-services';
+import {useRecordsStore} from '../../libs/store';
 
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const {setNewData, data} = useRecordsStore();
+  const loadDataCallback = useCallback(async () => {
+    try {
+      const db = await getDBConnection();
+      // deleteTable(db);
+      await createTable(db);
+      const storedRecords = await getRecords(db);
+      console.log({storedRecords});
+      if (storedRecords.length) {
+        setNewData(storedRecords);
+      } else {
+        setNewData([]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [setNewData]);
+
+  useEffect(() => {
+    loadDataCallback();
+  }, [loadDataCallback]);
+
+  console.log({data});
   return (
     <View style={styles.container}>
       <View style={[styles.wrapper]}>
@@ -48,7 +62,7 @@ const HomeScreen = () => {
       <FlatList
         style={{width: '100%'}}
         contentContainerStyle={{gap: 8}}
-        data={dummy}
+        data={data}
         renderItem={({item}) => <RowItem {...item} />}
       />
       <View style={styles.fabWrapper}>
