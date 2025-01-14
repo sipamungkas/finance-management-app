@@ -17,9 +17,10 @@ public class MainActivity extends ReactActivity {
     return "ChapterTest";
   }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(null)
-  }
+  @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(null);
+    }
 
   /**
    * Returns the instance of the {@link ReactActivityDelegate}. Here we use a util class {@link

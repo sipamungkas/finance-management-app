@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
   centeredView: {
@@ -34,7 +34,7 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     borderColor: '#0000001A',
-    padding: 12,
+    padding: Platform.select({android: 4, ios: 12}),
   },
   button: {
     borderRadius: 8,

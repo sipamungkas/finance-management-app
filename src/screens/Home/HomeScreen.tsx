@@ -14,7 +14,9 @@ import {
 import {useRecordsStore} from '../../libs/store';
 
 const Empty = () => (
-  <Text style={{textAlign: 'center', marginTop: 24}}>No Data</Text>
+  <Text style={{textAlign: 'center', marginTop: 24, color: 'black'}}>
+    No Data
+  </Text>
 );
 
 const HomeScreen = () => {
@@ -72,7 +74,7 @@ const HomeScreen = () => {
             <ArrowUp stroke={'red'} size={20} />
             <Text style={{fontSize: 18, color: 'red'}}>Expense</Text>
           </View>
-          <Text style={styles.txtAmmount}>IDR {monthlyIncome}</Text>
+          <Text style={styles.txtAmmount}>IDR {monthlyExpense}</Text>
         </View>
         <View style={styles.card}>
           <View style={styles.cardContainer}>
@@ -80,12 +82,18 @@ const HomeScreen = () => {
             <Text style={{fontSize: 18, color: 'green'}}>Income</Text>
           </View>
           <Text style={[styles.txtAmmount, {color: 'green'}]}>
-            IDR {monthlyExpense}
+            IDR {monthlyIncome}
           </Text>
         </View>
       </View>
 
-      <Text style={{fontSize: 18, fontWeight: 'bold', marginBottom: 12}}>
+      <Text
+        style={{
+          fontSize: 18,
+          fontWeight: 'bold',
+          marginBottom: 12,
+          color: 'black',
+        }}>
         Transactions History
       </Text>
       <FlatList
@@ -114,7 +122,7 @@ const HomeScreen = () => {
               setModalVisible(true);
             }, 500);
           }}>
-          <PlusCircle size={38} />
+          <PlusCircle size={38} color={'blue'} />
         </TouchableOpacity>
       </View>
       <ModalCreateRecord
