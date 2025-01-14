@@ -26,4 +26,15 @@ export default StyleSheet.create({
     paddingHorizontal: 24,
     marginTop: 5,
   },
+  fabWrapper: {
+    position: 'absolute',
+    bottom: 48,
+    right: 24,
+    backgroundColor: 'white',
+    width: 64,
+    height: 64,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 32,
+  },
 });

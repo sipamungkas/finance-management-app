@@ -1,8 +1,8 @@
-import {View, Text, FlatList} from 'react-native';
+import {View, Text, FlatList, TouchableOpacity} from 'react-native';
 import React from 'react';
 
 import styles from './styles';
-import {ArrowDown, ArrowUp} from 'lucide-react-native';
+import {ArrowDown, ArrowUp, PlusCircle} from 'lucide-react-native';
 import RowItem, {RowProps} from '../components/RowItem/RowItem';
 
 const dummy: RowProps[] = [
@@ -40,12 +40,20 @@ const HomeScreen = () => {
         </View>
       </View>
 
+      <Text style={{fontSize: 18, fontWeight: 'bold', marginBottom: 12}}>
+        Transactions History
+      </Text>
       <FlatList
         style={{width: '100%'}}
         contentContainerStyle={{gap: 8}}
         data={dummy}
         renderItem={({item}) => <RowItem {...item} />}
       />
+      <View style={styles.fabWrapper}>
+        <TouchableOpacity activeOpacity={0.2} onPress={() => {}}>
+          <PlusCircle size={38} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
