@@ -1,9 +1,10 @@
 import {View, Text, FlatList, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 
 import styles from './styles';
 import {ArrowDown, ArrowUp, PlusCircle} from 'lucide-react-native';
 import RowItem, {RowProps} from '../components/RowItem/RowItem';
+import ModalCreateRecord from '../components/ModalCreateRecord/ModalCreateRecord';
 
 const dummy: RowProps[] = [
   {
@@ -21,6 +22,7 @@ const dummy: RowProps[] = [
 ];
 
 const HomeScreen = () => {
+  const [modalVisible, setModalVisible] = useState(false);
   return (
     <View style={styles.container}>
       <View style={[styles.wrapper]}>
@@ -50,10 +52,18 @@ const HomeScreen = () => {
         renderItem={({item}) => <RowItem {...item} />}
       />
       <View style={styles.fabWrapper}>
-        <TouchableOpacity activeOpacity={0.2} onPress={() => {}}>
+        <TouchableOpacity
+          activeOpacity={0.2}
+          onPress={() => {
+            setModalVisible(true);
+          }}>
           <PlusCircle size={38} />
         </TouchableOpacity>
       </View>
+      <ModalCreateRecord
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
     </View>
   );
 };

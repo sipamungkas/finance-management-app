@@ -37,4 +37,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 32,
   },
+
+  // modal
 });
